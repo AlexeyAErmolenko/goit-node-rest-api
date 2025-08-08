@@ -1,5 +1,15 @@
 import Joi from "joi";
 
+export const idContactSchema = Joi.object({
+  id: Joi.string()
+    .pattern(/^[a-f0-9]{24}$/)
+    .required()
+    .messages({
+      "string.pattern.base": "Id must be a 24-character hexadecimal string!",
+      "any.required": "id is required!",
+    }),
+});
+
 export const createContactSchema = Joi.object({
   name: Joi.string().min(5).max(20).required().messages({
     "string.min": "Min 5 characters long.",
@@ -17,6 +27,7 @@ export const createContactSchema = Joi.object({
     "string.pattern.base": "Phone only digits!",
     "any.required": "Phone is required!",
   }),
+  favorite: Joi.boolean(),
 });
 
 export const updateContactSchema = Joi.object({
@@ -33,4 +44,9 @@ export const updateContactSchema = Joi.object({
     "string.length": "Phone must be exactly 10 digits!",
     "string.pattern.base": "Phone only digits!",
   }),
+  favorite: Joi.boolean(),
+});
+
+export const updateStatusContactSchema = Joi.object({
+  favorite: Joi.boolean(),
 });
