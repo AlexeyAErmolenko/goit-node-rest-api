@@ -15,25 +15,25 @@ import {
 
 const bodyParserJson = express.json();
 
-const contactsRouter = express.Router();
+const contacts = express.Router();
 
-contactsRouter.get("/", getAllContacts);
-contactsRouter.get("/:id", validateId(idContactSchema), getOneContact);
-contactsRouter.delete("/:id", validateId(idContactSchema), deleteContact);
-contactsRouter.post(
+contacts.get("/", getAllContacts);
+contacts.get("/:id", validateId(idContactSchema), getOneContact);
+contacts.delete("/:id", validateId(idContactSchema), deleteContact);
+contacts.post(
   "/",
   bodyParserJson,
   validateBody(createContactSchema),
   createContact
 );
-contactsRouter.put(
+contacts.put(
   "/:id",
   validateId(idContactSchema),
   bodyParserJson,
   validateBody(updateContactSchema),
   updateContact
 );
-contactsRouter.patch(
+contacts.patch(
   "/:id/favorite",
   validateId(idContactSchema),
   bodyParserJson,
@@ -41,4 +41,4 @@ contactsRouter.patch(
   updateStatusContact
 );
 
-export default contactsRouter;
+export default contacts;
