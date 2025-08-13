@@ -50,3 +50,27 @@ export const updateContactSchema = Joi.object({
 export const updateStatusContactSchema = Joi.object({
   favorite: Joi.boolean(),
 });
+
+export const userSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "string.email": "Email must be a valid email address.",
+    "any.required": "Email is required!",
+  }),
+
+  password: Joi.string().min(3).max(25).required().messages({
+    "string.min": "Min 3 characters long.",
+    "string.max": "Max 25 characters.",
+    "any.required": "Password is required!",
+  }),
+});
+
+export const updateSubscriptionUserSchema = Joi.object({
+  subscription: Joi.string()
+    .valid("starter", "pro", "business")
+    .required()
+    .messages({
+      "any.only":
+        "Subscription must be one of the following values: starter, pro, business.",
+      "any.required": "Subscription is required!",
+    }),
+});

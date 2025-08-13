@@ -21,5 +21,3 @@ export const validateId = (schema) => {
   };
   return func;
 };
-
-// export default validate;

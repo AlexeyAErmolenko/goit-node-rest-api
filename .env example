@@ -1,1 +1,2 @@
 DB_URI=ConnectLine
+JWT_SECRET= jwt key

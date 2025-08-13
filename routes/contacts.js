@@ -1,9 +1,9 @@
 import express from "express";
 import { validateBody, validateId } from "../helpers/validate.js";
-import { idContactSchema } from "../schemas/contactsSchemas.js";
-import { createContactSchema } from "../schemas/contactsSchemas.js";
-import { updateContactSchema } from "../schemas/contactsSchemas.js";
-import { updateStatusContactSchema } from "../schemas/contactsSchemas.js";
+import { idContactSchema } from "../schemas/joiSchemas.js";
+import { createContactSchema } from "../schemas/joiSchemas.js";
+import { updateContactSchema } from "../schemas/joiSchemas.js";
+import { updateStatusContactSchema } from "../schemas/joiSchemas.js";
 import {
   getAllContacts,
   getOneContact,
@@ -11,7 +11,8 @@ import {
   createContact,
   updateContact,
   updateStatusContact,
-} from "../controllers/contactsControllers.js";
+} from "../controllers/contacts.js";
+import correctPhone from "../middleware/correctPhone.js";
 
 const bodyParserJson = express.json();
 
@@ -24,6 +25,7 @@ contacts.post(
   "/",
   bodyParserJson,
   validateBody(createContactSchema),
+  correctPhone,
   createContact
 );
 contacts.put(
@@ -31,6 +33,7 @@ contacts.put(
   validateId(idContactSchema),
   bodyParserJson,
   validateBody(updateContactSchema),
+  correctPhone,
   updateContact
 );
 contacts.patch(
