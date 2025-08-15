@@ -1,6 +1,7 @@
 import express from "express";
 
 import uploadMiddleware from "../middleware/upload.js";
+// import resizeAva from "../middleware/resizeAvatar.js";
 
 import UserController from "../controllers/user.js";
 
