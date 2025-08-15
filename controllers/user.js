@@ -22,34 +22,17 @@ async function getAvatar(req, res, next) {
 async function uploadAvatar(req, res, next) {
   try {
     const originalPath = req.file.path;
-    console.log("🚀 ~ uploadAvatar ~ req.file.path:", req.file.path);
 
     const newPath = path.resolve("public", req.file.filename);
-    console.log("🚀 ~ resizeAvatar ~ newPath:", newPath);
 
     const avatar = await Jimp.read(originalPath);
-    console.log(
-      "🚀 ~ resizeAvatar ~ avatar.bitmap.width:",
-      avatar.bitmap.width
-    );
 
-    avatar.resize({ width: 250, height: 250 });
-
-    await fs.rename(originalPath, newPath);
-    // await avatar.write(newPath);
-    // await fs.unlink(originalPath);
-
-    // req.file.path = newPath;
-
-    // console.log("Зображення успішно змінено");
+    avatar.resize({ w: 250, h: 250 });
 
     const savePath = path.resolve("public/avatars", req.file.filename);
 
-    console.log("🚀 ~ uploadAvatar ~ savePath:", savePath);
-
-    await fs.rename(newPath, savePath);
-
-    console.log("🚀 ~ uploadAvatar - Rename ok");
+    await avatar.write(savePath);
+    await fs.unlink(originalPath);
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
@@ -57,13 +40,9 @@ async function uploadAvatar(req, res, next) {
       { new: true }
     );
 
-    console.log("🚀 ~ uploadAvatar - Update base ok");
-
     if (user === null) {
       return res.status(401).send({ message: "Not authorized" });
     }
-
-    console.log("🚀 ~ uploadAvatar - User update ok");
 
     res.status(200).send(user.avatarURL);
   } catch (error) {
