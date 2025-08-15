@@ -2,7 +2,7 @@
   "name": "goit-node",
   "type": "module",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node -r dotenv/config --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node -r dotenv/config ./db.js",
     "dev": "nodemon -r dotenv/config ./db.js"
   },
