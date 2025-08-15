@@ -14,6 +14,9 @@ export const getOneContact = async (req, res, next) => {
   try {
     const contactId = req.params.id;
     const contact = await contactsService.getContactById(contactId);
+    if (!contact) {
+      return next(HttpError(404, "Not found"));
+    }
     res.json({ status: 200, data: { contact } });
   } catch (error) {
     next(HttpError(404));
@@ -24,6 +27,10 @@ export const deleteContact = async (req, res, next) => {
   try {
     const contactId = req.params.id;
     const contact = await contactsService.removeContact(contactId);
+    if (!contact) {
+      return next(HttpError(404, "Not found"));
+    }
+    res;
     res.json({ status: 200, data: { contact } });
   } catch (error) {
     next(HttpError(404));
