@@ -81,9 +81,9 @@ async function current(req, res, next) {
   }
 }
 
-async function logout(_, res, next) {
+async function logout(req, res, next) {
   try {
-    const user = await User.findByIdAndUpdate(user._id, { token: null });
+    const user = await User.findByIdAndUpdate(req.user.id, { token: null });
 
     if (user === null) return next(HttpError(401, "Not authorized"));
 
