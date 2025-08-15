@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 import HttpError from "../helpers/HttpError.js";
+import gravatar from "gravatar";
 
 async function register(req, res, next) {
   const { email, password } = req.body;
@@ -9,11 +10,12 @@ async function register(req, res, next) {
   try {
     const user = await User.findOne({ email: emailInLowerCase });
     if (user !== null) return next(HttpError(409, "Email in use"));
-
+    const avatarURL = gravatar.url(email);
     const passwordHash = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       email: emailInLowerCase,
       password: passwordHash,
+      avatarURL,
     });
 
     const resRegister = {
