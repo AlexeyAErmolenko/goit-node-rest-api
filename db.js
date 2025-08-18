@@ -3,11 +3,9 @@ import { app } from "./app.js";
 
 mongoose.set("strictQuery", false);
 
-const DB_URI = process.env.DB_URI;
-
 async function main() {
   try {
-    mongoose.connect(DB_URI);
+    mongoose.connect(process.env.DB_URI);
     console.log("Database connection successful");
 
     const PORT = process.env.PORT || 3000;
@@ -21,13 +19,3 @@ async function main() {
 }
 
 main();
-
-// mongoose
-//   .connect(DB_URI)
-//   .then(() => {
-//     console.log("Database connection successful");
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//     process.exit(1);
-//   });
