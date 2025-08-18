@@ -1,21 +1,41 @@
+import crypto from "node:crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 import HttpError from "../helpers/HttpError.js";
+import mail from "../helpers/mail.js";
 import gravatar from "gravatar";
 
 async function register(req, res, next) {
   const { email, password } = req.body;
   const emailInLowerCase = email.toLowerCase();
+
+  const verificationToken = crypto.randomUUID();
+  const message = {
+    to: emailInLowerCase,
+    from: "contactBooks@gmail.com",
+    subject: "From Node.js",
+    html: `<h1 style="color: red">Hello, I am Node, I am Node.js</h1>
+        <a href="http://localhost:3000/api/users/verify/${verificationToken}">Follow the link to verify your email</a>`,
+    text: `Hello, I am Node, I am Node.js. Follow the link to verify your email http://localhost:3000/api/users/verify/${verificationToken}`,
+  };
+
+  await mail
+    .sendMail(message)
+    .then((info) => console.log(info))
+    .catch((err) => console.log(err));
+
   try {
     const user = await User.findOne({ email: emailInLowerCase });
     if (user !== null) return next(HttpError(409, "Email in use"));
     const avatarURL = gravatar.url(email);
     const passwordHash = await bcrypt.hash(password, 10);
+
     const newUser = await User.create({
       email: emailInLowerCase,
       password: passwordHash,
       avatarURL,
+      verificationToken,
     });
 
     const resRegister = {
@@ -44,6 +64,10 @@ async function login(req, res, next) {
       return next(HttpError(401, "Email or password is wrong"));
     }
 
+    if (user.verify === false) {
+      return res.status(401).send({ message: "Please verify your email." });
+    }
+
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET,
@@ -58,6 +82,7 @@ async function login(req, res, next) {
         subscription: user.subscription,
       },
     };
+
     res.send(resLogin);
   } catch (error) {
     next(error);

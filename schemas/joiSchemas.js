@@ -64,6 +64,13 @@ export const userSchema = Joi.object({
   }),
 });
 
+export const verifyMailSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "string.email": "Email must be a valid email address.",
+    "any.required": "Error from Joi or other validation library",
+  }),
+});
+
 export const updateSubscriptionUserSchema = Joi.object({
   subscription: Joi.string()
     .valid("starter", "pro", "business")
